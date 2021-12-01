@@ -17,7 +17,9 @@ int main(int argc, char *argv[]) {
     } else if (pid == 0) {
         // set state of child process to PTRACE
         ptrace(PTRACE_TRACEME,0,NULL,NULL);
-        // child will change to stopped state when in execve call, then send the signal to parent
+	//char *argv[] = {0, NULL};
+	// char *envp[] = {0, NULL};
+	// child will change to stopped state when in execve call, then send the signal to parent
         execve(argv[1], NULL, NULL);
     } else {
         int status;
