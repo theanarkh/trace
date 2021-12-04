@@ -17,10 +17,15 @@ int main(int argc, char *argv[]) {
     } else if (pid == 0) {
         // set state of child process to PTRACE
         ptrace(PTRACE_TRACEME,0,NULL,NULL);
-	//char *argv[] = {0, NULL};
-	// char *envp[] = {0, NULL};
+	char **args = (char **)malloc(sizeof(char *) * argc);
+	for (int i = 1; i < argc; i++) {
+		args[i - 1] = argv[i];
+	}
+	args[argc - 1] = NULL; 
 	// child will change to stopped state when in execve call, then send the signal to parent
-        execve(argv[1], NULL, NULL);
+        execve(argv[1], args, NULL);
+	// we will not go here if call execve success, if fail, free the memory
+	free(args);
     } else {
         int status;
         int bit = 1;
